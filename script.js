@@ -1,0 +1,112 @@
+const fs = require("fs");
+const path = require("path");
+
+// 👉 Files you want to include (order matters)
+const files = [
+  // "C:/Users/manis/Documents/myportfolio/portfolio/app/layout.jsx",
+  "C:/Users/manis/Documents/myportfolio/portfolio/app/(root)/page.jsx",
+  // "C:/Users/manis/Documents/myportfolio/portfolio/components/home/header.jsx",
+  "C:/Users/manis/Documents/myportfolio/portfolio/components/home/heroSection.jsx"
+];
+
+// 👉 Output file
+const outputFile = "copilot.txt";
+
+// 👉 Header prompt
+let output = `You are a senior software engineer.
+You are working on a large MERN Stack project.
+Each section starting with FILE: is a different file from the same project.
+Only fix the described problem in the relevant file. Do not rewrite unrelated code.
+Preserve all other files exactly as they are.
+
+`;
+
+// 👉 Read and append files
+files.forEach((filePath) => {
+  const content = fs.readFileSync(filePath, "utf8");
+  const normalizedPath = filePath.replace(/\\/g, "/");
+
+  output += `--------------------------------------------------
+FILE: ${filePath}
+--------------------------------------------------
+\`\`\`
+${content}
+\`\`\`
+
+`;
+});
+
+// 👉 Task section (customize as needed)
+output += `--------------------------------------------------
+TASK
+--------------------------------------------------
+{
+  "component": "HeroSection",
+  "description": "Design a modern hero section similar to the uploaded reference, using Tailwind CSS only.",
+  "layout": {
+    "type": "two-column",
+    "left": {
+      "elements": [
+        {
+          "type": "heading",
+          "text": "visual poetry",
+          "classes": "text-6xl font-extrabold text-black"
+        },
+        {
+          "type": "paragraph",
+          "text": "Welcome to a visual journey that transcends time and space. Discover the artistry of moments captured in motion",
+          "classes": "mt-4 text-base text-gray-700 max-w-lg"
+        },
+        {
+          "type": "social-icons",
+          "icons": ["yt", "ig", "fb", "x"],
+          "classes": "flex gap-4 mt-6"
+        },
+        {
+          "type": "stats",
+          "items": [
+            {
+              "value": "+250k",
+              "description": "Videos that reaching a wide audience and give lasting impression"
+            },
+            {
+              "value": "+800k",
+              "description": "Hours watched, engaging storytelling that captivates viewers"
+            }
+          ],
+          "classes": "flex gap-12 mt-8"
+        }
+      ],
+      "classes": "flex-1 flex flex-col justify-center"
+    },
+    "right": {
+      "elements": [
+        {
+          "type": "image",
+          "src": "hero-image.png",
+          "classes": "rounded-[2rem] relative w-full h-auto object-cover"
+        },
+        {
+          "type": "signature",
+          "text": "Signature",
+          "classes": "absolute top-4 left-6 text-white text-lg"
+        },
+        {
+          "type": "vertical-icons",
+          "icons": ["camera", "portrait"],
+          "classes": "absolute right-4 bottom-8 flex flex-col gap-4"
+        }
+      ],
+      "classes": "flex-1 relative"
+    }
+  },
+  "container": {
+    "classes": "max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row gap-12 items-center"
+  }
+}
+`;
+
+// 👉 Write output
+fs.writeFileSync(outputFile, output);
+
+console.log("copilot.txt generated successfully ✅");
